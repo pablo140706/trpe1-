@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mesa Lila · Sistema del Restaurante</title>
+<meta name="description" content="Sistema de gestión para restaurante: clientes, pedidos, platillos, chefs y meseros en un solo lugar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FBFAFE; --ink:#2E3150; --muted:#5F6480; --line:#E6E3F4;
+    --lav:#EEF1FE; --lav-2:#B9C5FA; --lav-ink:#5468D4;
+    --rose:#FDEFF3; --rose-2:#F7BBCB; --rose-ink:#D4567A;
+    --mint:#EAF7F1; --mint-2:#A8E0CB; --mint-ink:#2B9474;
+    --lilac:#F3EEFD; --lilac-2:#D3C2F7; --lilac-ink:#8660D6;
+    --peach:#FFF1E8; --peach-2:#FBCFB5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+  h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:700;line-height:1.1;letter-spacing:-.01em}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;background:rgba(251,250,254,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+  .logo{display:flex;align-items:center;gap:10px;font-family:Fraunces,serif;font-weight:700;font-size:1.35rem}
+  .logo i{width:30px;height:30px;border-radius:50%;background:conic-gradient(var(--lav-2) 0 33%,var(--rose-2) 0 66%,var(--mint-2) 0);display:inline-block}
+  .links{display:flex;gap:28px;font-size:.95rem;color:var(--muted);font-weight:500}
+  .links a:hover{color:var(--ink)}
+  .btn{display:inline-block;padding:12px 22px;border-radius:999px;font-weight:600;font-size:.95rem;transition:transform .15s}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-dark{background:var(--ink);color:#fff}
+  .btn-soft{background:#fff;border:1px solid var(--line)}
+
+  /* hero */
+  .hero{position:relative;padding:88px 0 96px;overflow:hidden;isolation:isolate}
+  .blob{position:absolute;border-radius:50%;z-index:-1;filter:blur(2px)}
+  .b1{width:460px;height:460px;background:#D9DFFD;top:-120px;right:-120px}
+  .b2{width:260px;height:260px;background:#FBD9E3;bottom:-40px;right:180px}
+  .b3{width:140px;height:140px;background:#CDEEDF;top:120px;left:-50px}
+  .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+  .tag{display:inline-block;background:var(--rose);color:var(--rose-ink);font-weight:600;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;padding:6px 14px;border-radius:999px;margin-bottom:22px}
+  .hero h1{font-size:clamp(2.4rem,5vw,4rem);margin-bottom:20px}
+  .hero h1 em{font-style:normal;color:var(--lav-ink)}
+  .hero p{font-size:1.15rem;color:var(--muted);max-width:520px;margin-bottom:32px}
+  .cta{display:flex;gap:14px;flex-wrap:wrap}
+
+  /* ticket mock */
+  .ticket{background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px;box-shadow:0 20px 50px -20px rgba(84,104,212,.25);transform:rotate(1.5deg)}
+  .ticket-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+  .ticket-head b{font-family:Fraunces,serif;font-size:1.3rem}
+  .pill{font-size:.75rem;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--mint);color:var(--mint-ink)}
+  .meta{display:flex;gap:18px;font-size:.85rem;color:var(--muted);margin-bottom:16px;flex-wrap:wrap}
+  .row{display:flex;justify-content:space-between;padding:11px 0;border-top:1px dashed var(--line);font-size:.95rem}
+  .row span:first-child b{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:7px;background:var(--lav);color:var(--lav-ink);font-size:.8rem;margin-right:10px}
+  .row small{display:block;color:var(--muted);font-size:.78rem;margin-left:34px}
+  .total{display:flex;justify-content:space-between;margin-top:8px;padding-top:14px;border-top:2px solid var(--ink);font-weight:700;font-size:1.1rem}
+
+  /* sections */
+  section{padding:84px 0}
+  .head{max-width:620px;margin-bottom:44px}
+  .head .k{color:var(--rose-ink);font-weight:600;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+  .head h2{font-size:clamp(1.9rem,3.5vw,2.6rem);margin-bottom:12px}
+  .head p{color:var(--muted);font-size:1.05rem}
+
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .step{border-radius:22px;padding:30px;border:1px solid}
+  .step .n{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:700;margin-bottom:18px;background:#fff}
+  .step h3{font-size:1.35rem;margin-bottom:8px}
+  .step p{color:var(--muted)}
+  .s1{background:var(--lav);border-color:var(--lav-2)} .s1 .n{color:var(--lav-ink)}
+  .s2{background:var(--rose);border-color:var(--rose-2)} .s2 .n{color:var(--rose-ink)}
+  .s3{background:var(--mint);border-color:var(--mint-2)} .s3 .n{color:var(--mint-ink)}
+
+  .menu{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .dishes{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  .dish{border:1px solid var(--line);border-radius:20px;overflow:hidden;background:var(--bg)}
+  .plate{height:130px;display:grid;place-items:center}
+  .plate i{width:78px;height:78px;border-radius:50%;background:#fff;box-shadow:inset 0 0 0 10px rgba(255,255,255,.6),0 8px 18px -8px rgba(46,49,80,.25);display:grid;place-items:center;font-style:normal;font-size:2rem}
+  .dish div.t{padding:18px}
+  .dish h3{font-family:Inter,sans-serif;font-size:1.02rem;font-weight:700;margin-bottom:4px}
+  .dish p{font-size:.86rem;color:var(--muted);margin-bottom:12px}
+  .dish .f{display:flex;justify-content:space-between;align-items:center;font-size:.85rem}
+  .dish .f b{font-size:1.05rem}
+  .chef{color:var(--lilac-ink);font-weight:600}
+
+  .roles{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  .role{background:#fff;border:1px solid var(--line);border-radius:20px;padding:26px}
+  .role .dot{width:14px;height:14px;border-radius:50%;margin-bottom:16px}
+  .role h3{font-family:Inter,sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:6px}
+  .role p{font-size:.92rem;color:var(--muted)}
+
+  .band{background:var(--lilac);border:1px solid var(--lilac-2);border-radius:28px;padding:54px;display:flex;justify-content:space-between;align-items:center;gap:30px;flex-wrap:wrap}
+  .band h2{font-size:clamp(1.7rem,3vw,2.3rem);max-width:560px}
+
+  footer{padding:40px 0 56px;color:var(--muted);font-size:.9rem}
+  footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:28px}
+
+  @media (max-width:900px){
+    .hero-grid{grid-template-columns:1fr}
+    .ticket{transform:none}
+    .steps{grid-template-columns:1fr}
+    .dishes,.roles{grid-template-columns:repeat(2,1fr)}
+    .links{display:none}
+  }
+  @media (max-width:560px){
+    .wrap{padding:0 16px}
+    .hero{padding:56px 0 64px}
+    .dishes,.roles{grid-template-columns:1fr}
+    .band{padding:32px}
+    section{padding:60px 0}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="#"><i></i>Mesa Lila</a>
+    <div class="links">
+      <a href="#como">Cómo funciona</a>
+      <a href="#menu">Menú</a>
+      <a href="#equipo">Para el equipo</a>
+    </div>
+    <a class="btn btn-dark" href="#menu">Ver menú</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+  <div class="wrap hero-grid">
+    <div>
+      <span class="tag">Sistema de gestión del restaurante</span>
+      <h1>Cada pedido, cada platillo y cada chef, <em>en un solo lugar</em></h1>
+      <p>Registra a tus clientes, toma pedidos desde la mesa, asigna platillos a tus chefs y consulta quién atendió qué, sin hojas sueltas ni datos duplicados.</p>
+      <div class="cta">
+        <a class="btn btn-dark" href="#como">Conocer el sistema</a>
+        <a class="btn btn-soft" href="#menu">Ver el menú</a>
+      </div>
+    </div>
+
+    <div class="ticket" aria-label="Ejemplo de pedido">
+      <div class="ticket-head"><b>Pedido #125</b><span class="pill">En cocina</span></div>
+      <div class="meta"><span>Cliente: Carlos</span><span>Mesero: Ana · turno tarde</span></div>
+      <div class="row"><span><b>2</b>Enchiladas verdes<small>Chef Juan</small></span><span>$190.00</span></div>
+      <div class="row"><span><b>1</b>Sopa de tortilla<small>Chef Lucía</small></span><span>$85.00</span></div>
+      <div class="row"><span><b>2</b>Agua de jamaica<small>Barra</small></span><span>$70.00</span></div>
+      <div class="total"><span>Total</span><span>$345.00</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="como">
+  <div class="wrap">
+    <div class="head">
+      <div class="k">Cómo funciona</div>
+      <h2>Del cliente a la cocina en tres pasos</h2>
+      <p>El sistema conecta lo que antes estaba separado: quién pide, qué pide, quién lo atiende y quién lo prepara.</p>
+    </div>
+    <div class="steps">
+      <div class="step s1"><div class="n">1</div><h3>El cliente pide</h3><p>Se registra una vez, con su dirección y sus teléfonos, y todos sus pedidos quedan ligados a él.</p></div>
+      <div class="step s2"><div class="n">2</div><h3>El mesero lo anota</h3><p>Cada pedido lo atiende un mesero de turno y puede llevar varios platillos, con cantidad y precio.</p></div>
+      <div class="step s3"><div class="n">3</div><h3>La cocina lo prepara</h3><p>Cada platillo tiene a sus chefs responsables, con su especialidad y la fecha desde que lo preparan.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="menu" class="menu">
+  <div class="wrap">
+    <div class="head">
+      <div class="k">Menú del día</div>
+      <h2>Platillos con chef responsable</h2>
+      <p>Cada platillo del menú está asignado a quien lo prepara.</p>
+    </div>
+    <div class="dishes">
+      <article class="dish"><div class="plate" style="background:var(--mint)"><i>🌮</i></div><div class="t"><h3>Enchiladas verdes</h3><p>Pollo, salsa de tomatillo, crema y queso fresco.</p><div class="f"><span class="chef">Chef Juan</span><b>$95</b></div></div></article>
+      <article class="dish"><div class="plate" style="background:var(--rose)"><i>🍲</i></div><div class="t"><h3>Sopa de tortilla</h3><p>Caldo de jitomate, tortilla frita, aguacate y chile pasilla.</p><div class="f"><span class="chef">Chef Lucía</span><b>$85</b></div></div></article>
+      <article class="dish"><div class="plate" style="background:var(--lav)"><i>🥗</i></div><div class="t"><h3>Ensalada de la casa</h3><p>Hojas verdes, jícama, mango y vinagreta de cítricos.</p><div class="f"><span class="chef">Chef Lucía</span><b>$75</b></div></div></article>
+      <article class="dish"><div class="plate" style="background:var(--peach)"><i>🍮</i></div><div class="t"><h3>Flan napolitano</h3><p>Receta casera con caramelo oscuro.</p><div class="f"><span class="chef">Chef Juan</span><b>$55</b></div></div></article>
+    </div>
+  </div>
+</section>
+
+<section id="equipo">
+  <div class="wrap">
+    <div class="head">
+      <div class="k">Para el equipo</div>
+      <h2>Cada quien ve lo que necesita</h2>
+      <p>Una sola base de datos para la administración, el piso y la cocina.</p>
+    </div>
+    <div class="roles">
+      <div class="role"><div class="dot" style="background:var(--lav-2)"></div><h3>Administración</h3><p>Consulta qué pidió cada cliente, en qué cantidad y a qué precio.</p></div>
+      <div class="role"><div class="dot" style="background:var(--rose-2)"></div><h3>Meseros</h3><p>Toman pedidos durante su turno y ven los que tienen a su cargo.</p></div>
+      <div class="role"><div class="dot" style="background:var(--mint-2)"></div><h3>Chefs</h3><p>Ven los platillos que tienen asignados y desde qué fecha.</p></div>
+      <div class="role"><div class="dot" style="background:var(--lilac-2)"></div><h3>Clientes</h3><p>Sus datos y teléfonos se guardan una sola vez, sin duplicarse.</p></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="band">
+      <h2>Menos papeles sueltos, más tiempo para la cocina</h2>
+      <a class="btn btn-dark" href="#como">Conocer el sistema</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Mesa Lila · Proyecto de Bases de Datos · ESCOM IPN</span>
+    <span>Álvarez Hernández Miguel Ángel · Eugenio Arredondo Ari Sebastián</span>
+  </div>
+</footer>
+
+</body>
+</html>
